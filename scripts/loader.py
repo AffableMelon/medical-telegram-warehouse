@@ -59,12 +59,12 @@ def load_data(conn):
                     ON CONFLICT DO NOTHING; -- Assuming simple dedup logic for now if PK was composite
                 """, (
                     channel_name,
-                    msg['id'],
-                    msg['date'],
-                    msg['text'],
-                    msg['views'],
-                    msg['forwards'],
-                    msg['media_path']
+                    msg.get('message_id'),
+                    msg.get('message_date'),
+                    msg.get('message_text'),
+                    msg.get('views'),
+                    msg.get('forwards'),
+                    msg.get('image_path')
                 ))
             print(f"Loaded {len(messages)} messages from {file_path}")
         conn.commit()

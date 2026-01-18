@@ -3,9 +3,10 @@ __pycache__/
 *.pyc
 .vscode/
 .venv/
-logs/
 data/
 target/
 dbt_modules/
 .dbt/
+reports/
+scripts/generate
 *.log
