@@ -38,7 +38,20 @@ This will populate `data/raw/` with JSONs and images.
    ```
 
 ## Project Structure
-- `src/`: Scraper application
-- `medical_warehouse/`: dbt project
-- `data/`: Local data lake
-- `scripts/`: Utility scripts
+
+```
+medical-telegram-warehouse/
+├── api/                 # API endpoints (FastAPI)
+├── data/                # Local data lake (raw JSONs, images)
+├── logs/                # Application logs
+├── medical_warehouse/   # dbt project (transformations)
+├── notebooks/           # Jupyter notebooks for exploration
+├── scripts/             # ETL and scraping scripts
+├── src/                 # Shared source code / utils
+├── tests/               # Unit and integration tests
+├── .env                 # Environment variables
+├── docker-compose.yml   # Docker services
+├── Dockerfile           # Application container
+├── requirements.txt     # Python dependencies
+└── README.md            # Project documentation
+```
