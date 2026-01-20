@@ -48,13 +48,15 @@ def get_channel_activity(channel_name: str, db: Session = Depends(database.get_d
 def search_messages(query: str, limit: int = 20, db: Session = Depends(database.get_db)):
     result = db.execute(text("""
         SELECT 
-            message_id,
-            channel_name,
-            date,
-            message_text as text,
-            views
-        FROM raw.telegram_messages
-        WHERE message_text ILIKE :query
+            m.message_id,
+            m.channel_name,
+            m.date,
+            m.message_text as text,
+            m.views,
+            c.category as image_category
+        FROM raw.telegram_messages m
+        LEFT JOIN raw.image_categories c ON m.message_id = c.message_id
+        WHERE m.message_text ILIKE :query
         LIMIT :limit
     """), {"query": f"%{query}%", "limit": limit}).fetchall()
     
@@ -69,7 +71,9 @@ def get_visual_content_stats(db: Session = Depends(database.get_db)):
                 c.channel_name,
                 COUNT(DISTINCT f.message_id) as total_images,
                 COUNT(DISTINCT CASE WHEN f.image_category = 'promotional' THEN f.message_id END) as promotional_images,
-                COUNT(DISTINCT CASE WHEN f.image_category = 'product_display' THEN f.message_id END) as product_images
+                COUNT(DISTINCT CASE WHEN f.image_category = 'product_display' THEN f.message_id END) as product_images,
+                COUNT(DISTINCT CASE WHEN f.image_category = 'lifestyle' THEN f.message_id END) as lifestyle_images,
+                COUNT(DISTINCT CASE WHEN f.image_category NOT IN ('promotional', 'product_display', 'lifestyle') OR f.image_category IS NULL THEN f.message_id END) as other_images
             FROM public_marts.fct_image_detections f
             JOIN public_marts.dim_channels c ON f.channel_key = c.channel_key
             GROUP BY c.channel_name
@@ -77,4 +81,4 @@ def get_visual_content_stats(db: Session = Depends(database.get_db)):
         return result
     except Exception as e:
         # Fallback if mart not ready
-        raise HTTPException(status_code=503, detail="Analytics data not available yet.")
+        raise HTTPException(status_code=503, detail=f"Analytics data not available yet. Error: {e}")

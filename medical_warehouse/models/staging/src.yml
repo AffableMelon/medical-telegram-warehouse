@@ -8,3 +8,5 @@ sources:
         description: Raw telegram messages
       - name: yolo_detections
         description: Raw YOLO detection results
+      - name: image_categories
+        description: Explicit image categorization results linked to message_id

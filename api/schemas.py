@@ -20,9 +20,12 @@ class Message(BaseModel):
     date: datetime
     text: str
     views: int
+    image_category: Optional[str] = None
 
 class VisualStats(BaseModel):
     channel_name: str
     total_images: int
     promotional_images: int
     product_images: int
+    lifestyle_images: int
+    other_images: int
