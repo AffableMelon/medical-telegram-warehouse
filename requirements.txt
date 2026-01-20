@@ -8,3 +8,8 @@ fastapi
 uvicorn
 pydantic
 pytest
+ultralytics
+opencv-python-headless
+dagster
+dagster-webserver
+dagster-dbt
